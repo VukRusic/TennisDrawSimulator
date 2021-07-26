@@ -11,6 +11,8 @@ var tennisPlayers = [
     { firstName: 'Hubert', lastName: 'Hurkacz', country: 'Poland', ranking: 8 }
 ];
 
+// var tennisPlayers = [];
+
 const shuffle = (array) => {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -22,6 +24,15 @@ const shuffle = (array) => {
 
   const getLoser = () => {
     return Math.floor(Math.random() * 2) + 1;
+  }
+
+  const getResult = (i) => {
+    sets1 = 3;
+    sets2 = Math.floor(Math.random() * 2);
+    if(i == 1)
+      return sets1 + " : " + sets2;
+    else
+      return sets2 + " : " + sets1; 
   }
   
   const makeDraw = () => {
@@ -66,7 +77,59 @@ const shuffle = (array) => {
     return rounds;
   }
 
+  
+const checkRanking = (tennisPlayers, ranking) =>{
+  var result = true;
+  tennisPlayers.forEach(player => {
+    if(player.ranking === ranking){
+      result = false;
+      console.log("Već postoji igrač sa unetim ranking-om!\nUnesite opet podatke ovog tenisera.")
+    }
+  });
+  
+  return result;
+}
+
+const checkPlayersNumbers = (N) => {
+    return (N != 1) && (N != 0) && ((N & (N - 1)) == 0);
+}
+
+const addTennisPlayer = () => {
+  var tempTennisPlayerData;
+  var rank;
+  do{
+  const tempTennisPlayer = readlineSync.question(
+    "Unesite tenisera u obliku [ime],[prezime],[drzava],[ranking]:"
+  );
+
+  tempTennisPlayerData = tempTennisPlayer.split(",");
+  rank = parseInt(tempTennisPlayerData[3]);
+  } while(checkRanking(tennisPlayers, rank) == false)
+
+  tennisPlayers.push({
+    firstName: tempTennisPlayerData[0],
+    lastName: tempTennisPlayerData[1],
+    country: tempTennisPlayerData[2],
+    ranking: parseInt(tempTennisPlayerData[3]),
+  });
+  console.log("Igrac je uspesno dodat!");
+}
+
+
   const main = () => {
+    // do {
+    //   N = readlineSync.question("Unesite broj tenisera\n(broj tenisera mora da bude u odgovarajucem foramtu (2, 4, 8,16, 32...) i ne veci od 64): ");
+    // } while (checkPlayersNumbers(N) == false)
+  
+    // for (var i = 0; i < N; i++) {
+    //   addTennisPlayer();
+    // }
+  
+    // console.log("\nSvi igrači su uspešno dodati.");
+  
+    shuffle(tennisPlayers);
+    console.log(tennisPlayers);
+
     makeDraw();    
     readlineSync.keyIn("\nPritisnite bilo koje dugme da zapocnete simulaciju turnira...")
     
@@ -84,12 +147,12 @@ const shuffle = (array) => {
         
         
         for(var j=0, m=1; j<tennisPlayers.length-1; j++, m++){
-            console.log(m + ". " + tennisPlayerToString(tennisPlayers[j]) + " - " + tennisPlayerToString(tennisPlayers[j+1]));
-            let l = getLoser();
-            if(l > 1)
-                losers.push(tennisPlayers[j++]);
-            else 
-                losers.push(tennisPlayers[++j]);
+          let l = getLoser();
+          console.log(m + ". " + tennisPlayerToString(tennisPlayers[j]) + " - " + tennisPlayerToString(tennisPlayers[j+1]) + ", result: " + getResult(l));
+          if(l > 1)
+            losers.push(tennisPlayers[j++]);
+          else 
+            losers.push(tennisPlayers[++j]);
         }
 
         losers.forEach(l => {
