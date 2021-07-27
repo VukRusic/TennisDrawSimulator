@@ -98,7 +98,6 @@ const checkPlayersNumbers = (N) => {
 //provera unetih podataka o teniseru
 const checkPlayerData = (data) => {
   var result = true;
-  console.log(data.length);
   if(data.length == 4) {
     if(isNaN(data[3])){
       result = false;
